@@ -4,3 +4,4 @@
 ![PHP](https://img.shields.io/static/v1?label=PHP&message=^8.0&color=blue)
 ![JSON Web Tokens](https://img.shields.io/static/v1?label=JWT&message=^1.0&color=yellow)
 ![MongoDB](https://img.shields.io/static/v1?label=MongoDB&message=^3.8&color=black)
+![Composer](https://img.shields.io/static/v1?label=Composer&message=2.0.14&color=green)
