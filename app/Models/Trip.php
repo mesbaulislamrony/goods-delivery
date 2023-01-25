@@ -3,7 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Database\Eloquent\Model;
+use Jenssegers\Mongodb\Eloquent\Model;
 
 class Trip extends Model
 {
@@ -17,13 +18,15 @@ class Trip extends Model
         'date',
     ];
 
+    protected $dates = ['created_at', 'updated_at'];
+
     public function transporter()
     {
-        return $this->belongsTo(User::class, 'transporter_id', 'id');
+        return $this->belongsTo(User::class, 'transporter_id', '_id');
     }
 
     public function goods()
     {
-        return $this->hasMany(UserTripGood::class, 'trip_id', 'id');
+        return $this->hasMany(UserTripGood::class, 'trip_id', '_id');
     }
 }

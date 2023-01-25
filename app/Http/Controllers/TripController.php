@@ -27,7 +27,6 @@ class TripController extends Controller
             ]
         );
 
-        DB::beginTransaction();
         try {
 
             $array['transporter_id'] = auth()->user()->id;
@@ -49,10 +48,8 @@ class TripController extends Controller
                 }
             }
 
-            DB::commit();
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {
-            DB::rollBack();
             return response()->json($throwable, 400);
         }
     }

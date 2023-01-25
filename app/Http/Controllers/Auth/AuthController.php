@@ -52,17 +52,22 @@ class AuthController extends Controller
 
         $array['password'] = Hash::make($request->password);
 
-        $credentials = User::create($array);
-        $token = auth('api')->login($credentials);
+        try {
 
-        return response()->json(
-            [
-                'access_token' => $token,
-                'token_type' => 'bearer',
-                'expires_in' => auth('api')->factory()->getTTL() * 60,
-            ],
-            200
-        );
+            $credentials = User::create($array);
+            $token = auth('api')->login($credentials);
+
+            return response()->json(
+                [
+                    'access_token' => $token,
+                    'token_type' => 'bearer',
+                    'expires_in' => auth('api')->factory()->getTTL() * 60,
+                ],
+                200
+            );
+        } catch (\Throwable $throwable) {
+            return response()->json($throwable);
+        }
     }
 
     public function refresh()
