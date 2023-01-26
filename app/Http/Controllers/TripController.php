@@ -31,7 +31,10 @@ class TripController extends Controller
 
             $array['transporter_id'] = auth()->user()->id;
             $array['date'] = Carbon::today()->format('Y-m-d');
+            $array['status'] = 'waiting';
+            $array['amount'] = rand(100, 999);
             $trip = Trip::create($array);
+            $trip_id = $trip->id;
 
             if (array_key_exists('goods', $array))
             {
@@ -49,6 +52,16 @@ class TripController extends Controller
             }
 
             return response()->json(new TripResource($trip), 200);
+        } catch (\Throwable $throwable) {
+            return response()->json($throwable, 400);
+        }
+    }
+
+    public function accept($id)
+    {
+        try {
+            Trip::find($id)->update(['status' => 'accept']);
+            return response()->json('Thank you for accepting offer', 200);
         } catch (\Throwable $throwable) {
             return response()->json($throwable, 400);
         }

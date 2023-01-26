@@ -20,6 +20,7 @@ class CreateTripsTable extends Migration
             $table->integer('transporter_id');
             $table->string('status')->default('waiting');
             $table->date('date');
+            $table->double('amount');
             $table->timestamps();
         });
     }

@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-//use Illuminate\Database\Eloquent\Model;
 use Jenssegers\Mongodb\Eloquent\Model;
+
+//use Illuminate\Database\Eloquent\Model;
 
 class Trip extends Model
 {
@@ -16,6 +17,7 @@ class Trip extends Model
         'transporter_id',
         'status',
         'date',
+        'amount',
     ];
 
     protected $dates = ['created_at', 'updated_at'];
