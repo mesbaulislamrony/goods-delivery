@@ -167,6 +167,7 @@ return [
          */
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         Jenssegers\Mongodb\MongodbServiceProvider::class,
+        Bschmitt\Amqp\AmqpServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -231,6 +232,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Amqp' => Bschmitt\Amqp\Facades\Amqp::class,
 
     ],
 

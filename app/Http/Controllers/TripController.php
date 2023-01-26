@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TripResource;
 use App\Models\Trip;
 use App\Models\UserTripGood;
+use Bschmitt\Amqp\Amqp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -51,6 +52,9 @@ class TripController extends Controller
                 }
             }
 
+            Amqp::publish('routing-key', $trip_id, ['queue' => 'trip']);
+            $this->notification();
+
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {
             return response()->json($throwable, 400);
@@ -65,5 +69,18 @@ class TripController extends Controller
         } catch (\Throwable $throwable) {
             return response()->json($throwable, 400);
         }
+    }
+
+    public function notification()
+    {
+        Amqp::consume(
+            'trip',
+            function ($message, $resolver) {
+                $payload = Trip::with('transporter', 'goods')->find($message->body);
+                Mail::to($payload->transporter->email)->send(new TripOrder($payload));
+                $resolver->acknowledge($message);
+                $resolver->stopWhenProcessed();
+            }
+        );
     }
 }
