@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\TripController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\TripController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,19 +17,38 @@ use App\Http\Controllers\Auth\AuthController;
 */
 
 
-Route::prefix('user')->controller(AuthController::class)->group(function (){
-    Route::post('login', 'login');
-    Route::post('register', 'register');
-    Route::middleware('auth:api')->group(function () {
-        Route::get('me', 'me');
-        Route::post('logout', 'logout');
-        Route::post('refresh', 'refresh');
-    });
-});
+Route::prefix('user')->controller(AuthController::class)->group(
+    function () {
+        Route::post('login', 'login');
+        Route::post('register', 'register');
+        Route::middleware('auth:api')->group(
+            function () {
+                Route::get('me', 'me');
+                Route::post('logout', 'logout');
+                Route::post('refresh', 'refresh');
+            }
+        );
+    }
+);
 
-Route::middleware('jwt.auth')->group(function () {
-    Route::prefix('trips')->controller(TripController::class)->group(function (){
-        Route::get('/', 'trips');
-        Route::post('/store', 'store');
-    });
-});
+Route::middleware('jwt.auth')->group(
+    function () {
+        Route::prefix('trips')->controller(TripController::class)->group(
+            function () {
+                Route::get('/', 'trips');
+                Route::get('/accept/{id}', 'accept');
+                Route::post('/store', 'store');
+            }
+        );
+    }
+);
+
+Route::middleware('jwt.auth')->group(
+    function () {
+        Route::prefix('billing')->controller(BillingController::class)->group(
+            function () {
+                Route::get('/', 'index');
+            }
+        );
+    }
+);
