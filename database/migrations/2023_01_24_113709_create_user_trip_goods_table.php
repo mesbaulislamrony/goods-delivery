@@ -17,7 +17,7 @@ class CreateUserTripGoodsTable extends Migration
             $table->id();
             $table->integer('trip_id');
             $table->integer('transporter_id');
-            $table->string('goods');
+            $table->string('name');
         });
     }
 

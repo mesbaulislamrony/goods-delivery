@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TripResource;
+use App\Mail\TripOrder;
 use App\Models\Trip;
 use App\Models\UserTripGood;
 use Bschmitt\Amqp\Amqp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TripController extends Controller
 {
@@ -29,7 +30,6 @@ class TripController extends Controller
         );
 
         try {
-
             $array['transporter_id'] = auth()->user()->id;
             $array['date'] = Carbon::today()->format('Y-m-d');
             $array['status'] = 'waiting';
@@ -37,25 +37,27 @@ class TripController extends Controller
             $trip = Trip::create($array);
             $trip_id = $trip->id;
 
-            if (array_key_exists('goods', $array))
-            {
-                if (!empty($array['goods']))
-                {
-                    $goodsArray = array_map(function ($item) use ($trip_id) {
-                        $array['trip_id'] = $trip_id;
-                        $array['transporter_id'] = auth()->user()->id;
-                        $array['name'] = $item;
-                        return $array;
-                    }, $array['goods']);
+            if (array_key_exists('goods', $array)) {
+                if (!empty($array['goods'])) {
+                    $goodsArray = array_map(
+                        function ($item) use ($trip_id) {
+                            $array['trip_id'] = $trip_id;
+                            $array['transporter_id'] = auth()->user()->id;
+                            $array['name'] = $item;
+                            return $array;
+                        },
+                        $array['goods']
+                    );
                     UserTripGood::insert($goodsArray);
                 }
             }
 
-            Amqp::publish('routing-key', $trip_id, ['queue' => 'trip']);
+            Amqp::publish('routing-key', "" . $trip_id . "", ['queue' => 'trip']);
             $this->notification();
 
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {
+            dd($throwable);
             return response()->json($throwable, 400);
         }
     }
