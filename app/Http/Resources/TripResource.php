@@ -14,6 +14,7 @@ class TripResource extends JsonResource
             'to' => $this->to,
             'status' => $this->status,
             'date' => $this->date,
+            'amount' => $this->amount,
             'goods' => UserTripGoodsResource::collection($this->goods),
             'transporter' => new TransporterResource($this->transporter),
         ];

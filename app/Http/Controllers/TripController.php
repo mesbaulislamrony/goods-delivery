@@ -41,7 +41,6 @@ class TripController extends Controller
             {
                 if (!empty($array['goods']))
                 {
-                    $trip_id = $trip->id;
                     $goodsArray = array_map(function ($item) use ($trip_id) {
                         $array['trip_id'] = $trip_id;
                         $array['transporter_id'] = auth()->user()->id;
