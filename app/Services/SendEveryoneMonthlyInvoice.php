@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Mail\TripBilling;
+use App\Mail\MonthlyInvoice;
 use App\Models\Billing;
 use App\Models\Trip;
 use App\Models\User;
@@ -16,7 +16,7 @@ class SendEveryoneMonthlyInvoice
         $users = User::all();
         if (!empty($users)) {
             foreach ($users as $user) {
-                Mail::to($user->email)->send(new TripBilling($user->billing));
+                Mail::to($user->email)->send(new MonthlyInvoice($user->billing));
             }
         }
     }
