@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TripBilling extends Mailable
+class MonthlyInvoice extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,6 +20,6 @@ class TripBilling extends Mailable
 
     public function build()
     {
-        return $this->from('billing@tripbd.com', 'Billing')->view('billing.invoice');
+        return $this->from('billing@tripbd.com', 'Billing')->view('billing.invoice')->with(['data' => $this->billing]);
     }
 }
