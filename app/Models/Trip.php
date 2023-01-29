@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Jenssegers\Mongodb\Eloquent\Model;
+//use Jenssegers\Mongodb\Eloquent\Model;
 
-//use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Trip extends Model
 {
@@ -24,11 +24,11 @@ class Trip extends Model
 
     public function transporter()
     {
-        return $this->belongsTo(User::class, 'transporter_id', '_id');
+        return $this->belongsTo(User::class, 'transporter_id', 'id');
     }
 
     public function goods()
     {
-        return $this->hasMany(UserTripGood::class, 'trip_id', '_id');
+        return $this->hasMany(UserTripGood::class, 'trip_id', 'id');
     }
 }

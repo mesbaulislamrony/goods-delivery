@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Jenssegers\Mongodb\Eloquent\Model;
+//use Jenssegers\Mongodb\Eloquent\Model;
 
-//use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Billing extends Model
 {
@@ -19,6 +19,6 @@ class Billing extends Model
 
     public function transporter()
     {
-        return $this->belongsTo(User::class, 'transporter_id', '_id');
+        return $this->belongsTo(User::class, 'transporter_id', 'id');
     }
 }
