@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-use App\Models\Billing;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,7 +12,7 @@ class MonthlyInvoice extends Mailable
 
     public $billing;
 
-    public function __construct(Billing $billing)
+    public function __construct($billing)
     {
         $this->billing = $billing;
     }
