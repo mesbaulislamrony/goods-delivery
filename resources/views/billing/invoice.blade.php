@@ -1,17 +1,23 @@
-<div style="text-align: center">
-    <h1>Your Billing Invoice</h1>
-    @if(!empty($data))
-        <table style="width: 100%; text-align: left" border="1">
-            <tr>
-                <th>Date</th>
-                <th style="text-align: right">Amount</th>
-            </tr>
-            @foreach($data as $value)
+<table style="width: 480px; margin: 0 auto; text-align: left;" border="0">
+    <tr>
+        <td colspan="2">
+            <h1 style="text-align: center">Your Billing Invoice</h1>
+        </td>
+    </tr>
+    <tr>
+        <th>Date</th>
+        <th style="text-align: right">Amount</th>
+    </tr>
+    @if(!empty($data) & (count($data) > 0))
+        @foreach($data as $value)
             <tr>
                 <td>{{ $value->date }}</td>
                 <td style="text-align: right">{{ $value->amount }} Tk</td>
             </tr>
-            @endforeach
-        </table>
+        @endforeach
+    @else
+        <tr>
+            <td colspan="2" style="text-align: center">Your billing invoice is empty</td>
+        </tr>
     @endif
-</div>
+</table>
