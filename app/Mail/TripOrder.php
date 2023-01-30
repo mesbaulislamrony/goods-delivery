@@ -20,6 +20,6 @@ class TripOrder extends Mailable
 
     public function build()
     {
-        return $this->from('system@tripbd.com', 'Trip Order')->view('trip.order')->with(['data' => $this->trip]);
+        return $this->from('system@tripbd.com', 'System')->subject('Trip Order')->view('trip.order')->with(['data' => $this->trip]);
     }
 }

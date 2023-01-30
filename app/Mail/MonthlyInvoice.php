@@ -19,6 +19,6 @@ class MonthlyInvoice extends Mailable
 
     public function build()
     {
-        return $this->from('billing@tripbd.com', 'Billing')->view('billing.invoice')->with(['data' => $this->billing]);
+        return $this->from('system@tripbd.com', 'System')->subject('Monthly Invoice')->view('billing.invoice')->with(['data' => $this->billing]);
     }
 }

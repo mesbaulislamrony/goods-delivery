@@ -20,6 +20,6 @@ class SendVerificationCodeMailable extends Mailable
 
     public function build()
     {
-        return $this->from('system@tripbd.com', 'System Mail')->subject('Verification Code')->view('auth.code')->with(['data' => $this->message]);
+        return $this->from('system@tripbd.com', 'System')->subject('Verification Code')->view('auth.code')->with(['data' => $this->message]);
     }
 }
