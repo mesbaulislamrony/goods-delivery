@@ -21,6 +21,7 @@ Route::prefix('user')->controller(AuthController::class)->group(
     function () {
         Route::post('login', 'login');
         Route::post('register', 'register');
+        Route::post('verify', 'verify');
         Route::middleware('auth:api')->group(
             function () {
                 Route::get('me', 'me');
