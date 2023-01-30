@@ -13,7 +13,7 @@ class TripOrder extends Mailable
 
     public $trip;
 
-    public function __construct(Trip $trip)
+    public function __construct($trip)
     {
         $this->trip = $trip;
     }

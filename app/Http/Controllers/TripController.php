@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TripResource;
+use App\Jobs\SendTripMail;
 use App\Mail\TripOrder;
 use App\Models\Trip;
+use App\Models\User;
 use App\Models\UserTripGood;
 use Bschmitt\Amqp\Amqp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 
 class TripController extends Controller
@@ -52,8 +55,17 @@ class TripController extends Controller
                 }
             }
 
-            Amqp::publish('routing-key', "" . $trip_id . "", ['queue' => 'trip']);
-            $this->notification();
+            $trip = Trip::with('transporter', 'goods')->find($trip_id);
+
+            /*
+             * Laravel Queue
+             * */
+            // SendTripMail::dispatch(json_encode($trip))->onQueue('send-trip-mail-everyone');
+
+            /*
+             * Rabbit MQ Queue
+             * */
+            Amqp::publish('routing-key', json_encode($trip), ['queue' => 'send-trip-mail-everyone']);
 
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {
@@ -74,14 +86,6 @@ class TripController extends Controller
 
     public function notification()
     {
-        Amqp::consume(
-            'trip',
-            function ($message, $resolver) {
-                $payload = Trip::with('transporter', 'goods')->find($message->body);
-                Mail::to($payload->transporter->email)->send(new TripOrder($payload));
-                $resolver->acknowledge($message);
-                $resolver->stopWhenProcessed();
-            }
-        );
+
     }
 }
