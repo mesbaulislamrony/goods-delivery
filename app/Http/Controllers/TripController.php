@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\TripOrder;
 use App\Http\Resources\TripResource;
-use App\Jobs\SendTripMail;
-use App\Mail\TripOrder;
 use App\Models\Trip;
-use App\Models\User;
 use App\Models\UserTripGood;
 use Bschmitt\Amqp\Amqp;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Mail;
 
 class TripController extends Controller
 {
@@ -65,7 +61,13 @@ class TripController extends Controller
             /*
              * Rabbit MQ Queue
              * */
-            Amqp::publish('routing-key', json_encode($trip), ['queue' => 'send-trip-mail-everyone']);
+            // Amqp::publish('routing-key', json_encode($trip), ['queue' => 'send-trip-mail-everyone']);
+
+            /*
+             * Laravel Event
+             * */
+
+            event(new TripOrder(json_encode($trip)));
 
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {
@@ -86,6 +88,5 @@ class TripController extends Controller
 
     public function notification()
     {
-
     }
 }
