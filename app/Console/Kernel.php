@@ -3,7 +3,7 @@
 namespace App\Console;
 
 use App\Jobs\SendBillingInvoice;
-use App\Jobs\SendMonthlyInvoice;
+use App\Jobs\MonthlyInvoiceJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->command('generate:billing')->daily();
         $schedule->command('send:invoice')->monthly();
-        $schedule->job(new SendMonthlyInvoice, 'monthly-invoice', 'database')->monthlyOn(1, '15:00');
+        $schedule->job(new MonthlyInvoiceJob, 'monthly-invoice', 'database')->monthlyOn(1, '15:00');
     }
 
     protected function commands()

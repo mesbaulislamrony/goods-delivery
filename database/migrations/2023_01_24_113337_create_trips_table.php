@@ -18,6 +18,7 @@ class CreateTripsTable extends Migration
             $table->integer('from');
             $table->integer('to');
             $table->integer('transporter_id');
+            $table->enum('type', ['pickup', 'delivery'])->default('delivery');
             $table->string('status')->default('waiting');
             $table->date('date');
             $table->double('amount');

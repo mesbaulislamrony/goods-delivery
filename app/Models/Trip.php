@@ -15,6 +15,7 @@ class Trip extends Model
         'from',
         'to',
         'transporter_id',
+        'type',
         'status',
         'date',
         'amount',

@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\MonthlyInvoice;
+use App\Mail\MonthlyInvoiceMailable;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -11,7 +11,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
-class SendMonthlyInvoice implements ShouldQueue
+class MonthlyInvoiceJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -24,6 +24,6 @@ class SendMonthlyInvoice implements ShouldQueue
 
     public function handle()
     {
-        Mail::to($this->user->email)->send(new MonthlyInvoice($this->user->billing));
+        Mail::to($this->user->email)->send(new MonthlyInvoiceMailable($this->user->billing));
     }
 }

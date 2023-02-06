@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\TripOrder;
+use App\Events\TripOrderEvent;
 use App\Listeners\SendTripMailNotificationEveryone;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        TripOrder::class => [
+        TripOrderEvent::class => [
             SendTripMailNotificationEveryone::class
         ]
     ];

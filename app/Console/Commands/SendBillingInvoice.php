@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\SendMonthlyInvoice;
+use App\Jobs\MonthlyInvoiceJob;
 use App\Mail\MonthlyInvoice;
 use App\Models\User;
 use Illuminate\Console\Command;
@@ -24,7 +24,7 @@ class SendBillingInvoice extends Command
         $users = User::with('billing')->get();
         if (!empty($users)) {
             foreach ($users as $user) {
-                SendMonthlyInvoice::dispatch($user)->onQueue('monthly-invoice');
+                MonthlyInvoiceJob::dispatch($user)->onQueue('monthly-invoice');
             }
         }
     }

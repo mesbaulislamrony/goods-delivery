@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class TripOrder extends Mailable
+class TripOrderMailable extends Mailable
 {
     use Queueable, SerializesModels;
 

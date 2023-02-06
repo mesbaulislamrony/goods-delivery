@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\TripOrder;
+use App\Mail\TripOrderMailable;
 use App\Models\User;
 use Bschmitt\Amqp\Amqp;
 use Illuminate\Console\Command;
@@ -29,7 +29,7 @@ class ConsumeRabbitQueue extends Command
                 if (!empty($emails)) {
                     $payload = json_decode($message->body);
                     foreach ($emails as $email) {
-                        Mail::to($email)->send(new TripOrder($payload));
+                        Mail::to($email)->send(new TripOrderMailable($payload));
                     }
                 }
 

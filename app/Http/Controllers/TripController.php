@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\TripOrder;
+use App\Events\TripOrderEvent;
 use App\Http\Resources\TripResource;
+use App\Jobs\TripOrderJob;
 use App\Models\Trip;
 use App\Models\UserTripGood;
 use Bschmitt\Amqp\Amqp;
@@ -14,7 +15,7 @@ class TripController extends Controller
 {
     public function trips()
     {
-        $trips = Trip::all();
+        $trips = Trip::where(['status' => 'waiting'])->get();
         return response()->json(TripResource::collection($trips), 200);
     }
 
@@ -25,6 +26,7 @@ class TripController extends Controller
                 'from' => 'required|integer',
                 'to' => 'required|integer',
                 'goods' => 'required|array',
+                'type' => 'required|in:delivery,pickup',
             ]
         );
 
@@ -56,18 +58,17 @@ class TripController extends Controller
             /*
              * Laravel Queue
              * */
-            // SendTripMail::dispatch(json_encode($trip))->onQueue('send-trip-mail-everyone');
+            TripOrderJob::dispatch(json_encode($trip))->onQueue('send-trip-mail-everyone');
 
             /*
              * Rabbit MQ Queue
              * */
-            // Amqp::publish('routing-key', json_encode($trip), ['queue' => 'send-trip-mail-everyone']);
+//            Amqp::publish('routing-key', json_encode($trip), ['queue' => 'send-trip-mail-everyone']);
 
             /*
              * Laravel Event
              * */
-
-            event(new TripOrder(json_encode($trip)));
+//            event(new TripOrderEvent(json_encode($trip)));
 
             return response()->json(new TripResource($trip), 200);
         } catch (\Throwable $throwable) {

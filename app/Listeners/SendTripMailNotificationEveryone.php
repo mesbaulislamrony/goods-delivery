@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\TripOrder;
-use App\Mail\TripOrder as TripOrderMailer;
+use App\Events\TripOrderEvent;
+use App\Mail\TripOrderMailable as TripOrderMailer;
 use App\Models\User;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
@@ -17,7 +17,7 @@ class SendTripMailNotificationEveryone
         //
     }
 
-    public function handle(TripOrder $event)
+    public function handle(TripOrderEvent $event)
     {
         $emails = User::pluck('email');
         if (!empty($emails)) {
