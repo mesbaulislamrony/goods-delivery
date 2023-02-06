@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Mail\SendVerificationCodeMailable;
+use App\Mail\VerificationCodeMailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -26,7 +26,7 @@ class SendVerificationCode extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        return (new SendVerificationCodeMailable($this->code))->to($notifiable->email);
+        return (new VerificationCodeMailable($this->code))->to($notifiable->email);
     }
 
     public function toArray($notifiable)

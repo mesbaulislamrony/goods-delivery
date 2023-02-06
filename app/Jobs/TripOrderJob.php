@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\TripOrder;
+use App\Mail\TripOrderMailable;
 use App\Models\Trip;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
@@ -29,7 +29,7 @@ class SendTripMail implements ShouldQueue
         if (!empty($emails)) {
             $payload = json_decode($this->trip);
             foreach ($emails as $email) {
-                Mail::to($email)->send(new TripOrder($payload));
+                Mail::to($email)->send(new TripOrderMailable($payload));
             }
         }
     }

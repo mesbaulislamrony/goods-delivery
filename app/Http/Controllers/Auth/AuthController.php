@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProfileResource;
+use App\Models\Otp;
 use App\Models\User;
-use App\Notifications\SendVerificationCode;
+use App\Notifications\VerificationCodeNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,29 +54,37 @@ class AuthController extends Controller
         );
 
         $array['password'] = Hash::make($request->password);
-        $array['code'] = rand(1000, 9999);
 
         try {
             $credentials = User::create($array);
-            $credentials->notify(new SendVerificationCode($array['code']));
+            $otp = Otp::create(
+                [
+                    'email' => $request->email,
+                    'key' => rand(1000, 9999),
+                    'time' => time()
+                ]
+            );
+
+            $credentials->notify(new VerificationCodeNotification($otp->key));
             return response()->json('Send verification code send to your mail.', 200);
         } catch (\Throwable $throwable) {
+            dd($throwable);
             return response()->json($throwable);
         }
     }
 
     public function verify(Request $request)
     {
-        $credentials = $request->validate(
+        $array = $request->validate(
             [
-                'code' => 'required|string|max:4',
+                'key' => 'required|string|max:4',
                 'email' => 'required|string|email|max:255|exists:users',
             ]
         );
 
-        $check = User::where($credentials)->exists();
+        $check = Otp::where($array)->exists();
         if ($check) {
-            User::where($credentials)->update(['email_verified_at' => Carbon::today()->format('Y-m-d h:m:s')]);
+            User::where(['email' => $request->email])->update(['email_verified_at' => Carbon::today()->format('Y-m-d h:m:s')]);
             return response()->json(['error' => 'You have successfully verified your email address.'], 200);
         }
         return response()->json(['error' => 'Verification code is invalid.'], 401);
