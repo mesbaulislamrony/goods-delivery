@@ -22,18 +22,18 @@ Route::prefix('user')->controller(AuthController::class)->group(
         Route::post('login', 'login');
         Route::post('register', 'register');
         Route::post('verify', 'verify');
-        Route::middleware('auth:api')->group(
+    }
+);
+
+Route::middleware('jwt.auth')->group(
+    function () {
+        Route::prefix('user')->controller(AuthController::class)->group(
             function () {
                 Route::get('me', 'me');
                 Route::post('logout', 'logout');
                 Route::post('refresh', 'refresh');
             }
         );
-    }
-);
-
-Route::middleware('jwt.auth')->group(
-    function () {
         Route::prefix('trips')->controller(TripController::class)->group(
             function () {
                 Route::get('/', 'trips');
@@ -41,14 +41,10 @@ Route::middleware('jwt.auth')->group(
                 Route::post('/store', 'store');
             }
         );
-    }
-);
-
-Route::middleware('jwt.auth')->group(
-    function () {
         Route::prefix('billing')->controller(BillingController::class)->group(
             function () {
                 Route::get('/', 'index');
+                Route::get('/total', 'total');
             }
         );
     }
